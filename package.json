@@ -1,0 +1,19 @@
+{
+  "name": "test1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:e2e": "vue-cli-service test:e2e --env firefox"
+  },
+  "dependencies": {
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-e2e-nightwatch": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "geckodriver": "^3.0.1",
+    "naive-ui": "^2.41.0"
+  }
+}
