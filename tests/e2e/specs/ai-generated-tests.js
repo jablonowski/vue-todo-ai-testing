@@ -3,7 +3,8 @@ module.exports = {
         browser
             .url('http://localhost:8080') // Adjust the URL to your local server
             .waitForElementVisible('#app', 1000)
-            .perform(addTodo, 'send an email to mom')
+            .setValue('#new-todo', 'send an email to mom')
+            .click('#add-todo')
             .waitForElementVisible('#todo-list', 1000)
             .assert.containsText('#todo-list', 'send an email to mom')
             .end();
@@ -12,7 +13,13 @@ module.exports = {
         browser
             .url('http://localhost:8080') // Adjust the URL to your local server
             .waitForElementVisible('#app', 1000)
-            .perform(addMultipleTodos, ['test1', 'test2', 'test3', 'test4'])
+            .perform(function() {
+                ['test1', 'test2', 'test3', 'test4'].forEach(todo => {
+                    browser
+                        .setValue('#new-todo', todo)
+                        .click('#add-todo');
+                });
+            })
             .waitForElementVisible('#todo-list', 1000)
             .elements('css selector', '#todo-list li', function (result) {
                 this.assert.equal(result.value.length, 4, 'There are 4 items in the todo list');
@@ -23,7 +30,13 @@ module.exports = {
         browser
             .url('http://localhost:8080') // Adjust the URL to your local server
             .waitForElementVisible('#app', 1000)
-            .perform(addMultipleTodos, ['todo1', 'todo2'])
+            .perform(function() {
+                ['todo1', 'todo2'].forEach(todo => {
+                    browser
+                        .setValue('#new-todo', todo)
+                        .click('#add-todo');
+                });
+            })
             .waitForElementVisible('#todo-list', 1000)
             .elements('css selector', '#todo-list li', function (result) {
                 this.assert.equal(result.value.length, 2, 'There are 2 items in the todo list');
@@ -37,15 +50,3 @@ module.exports = {
             .end();
     }
 };
-
-function addTodo(browser, todoText) {
-    browser
-        .setValue('#new-todo', todoText)
-        .click('#add-todo');
-}
-
-function addMultipleTodos(browser, todos) {
-    todos.forEach(todo => {
-        addTodo(browser, todo);
-    });
-}
