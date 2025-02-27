@@ -2,10 +2,12 @@
   <div>
     <form v-on:submit.prevent="addNewTodo">
       <input class="add-input" type="text" v-model="newTodoText" id="new-todo" placeholder="Add a todo e.g. call mom" />
+      <input type="checkbox" id="important" v-model="isImportant" />
+      <label for="important">Important</label>
       <button class="add-btn" id="add-todo">Add</button>
     </form>
     <ul class="todo-list" id="todo-list">
-      <todo-item v-for="(todo, index) in todos" :key="todo.id" :title="todo.title"
+      <todo-item v-for="(todo, index) in todos" :key="todo.id" :title="todo.title" :isImportant="todo.isImportant"
         @remove="todos.splice(index, 1)"></todo-item>
     </ul>
   </div>
@@ -31,8 +33,10 @@ export default {
       this.todos.push({
         id: this.nextTodoId++,
         title: this.newTodoText,
+        isImportant: this.isImportant,
       });
       this.newTodoText = "";
+      this.isImportant = false;
     },
   },
 };

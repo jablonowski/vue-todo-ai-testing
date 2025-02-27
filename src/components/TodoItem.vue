@@ -1,6 +1,7 @@
 <template>
   <li class="todo-item">
     {{ title }}
+    <span v-if="isImportant">(!)</span>
     <button class="remove-btn" @click="$emit('remove')">X</button>
   </li>
 </template>
@@ -8,7 +9,7 @@
 <script>
 export default {
   name: "TodoItem",
-  props: ["title"],
+  props: ["title", "isImportant"],
   emits: ["remove"],
 };
 </script>
