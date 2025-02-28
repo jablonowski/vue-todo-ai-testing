@@ -30,6 +30,9 @@ export default {
   },
   methods: {
     addNewTodo() {
+      if (!this.newTodoText) {
+        return;
+      }
       this.todos.push({
         id: this.nextTodoId++,
         title: this.newTodoText,
