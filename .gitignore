@@ -2,12 +2,21 @@
 node_modules
 /dist
 /lods
+/logs
 
 /tests/e2e/reports/
 selenium-debug.log
 chromedriver.log
 geckodriver.log
 
+# Robot Framework
+tests/robot/results/
+*.html
+*.xml
+log.html
+output.xml
+report.html
+selenium-screenshot-*.png
 
 # local env files
 .env.local

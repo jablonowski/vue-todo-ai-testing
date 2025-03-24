@@ -1,0 +1,6 @@
+projectKey=vue-todo-ai-testing
+serverUrl=http://localhost:9001
+serverVersion=25.3.0.104237
+dashboardUrl=http://localhost:9001/dashboard?id=vue-todo-ai-testing
+ceTaskId=1a0bc935-48fc-4dde-b9f2-434c66dbdbb1
+ceTaskUrl=http://localhost:9001/api/ce/task?id=1a0bc935-48fc-4dde-b9f2-434c66dbdbb1

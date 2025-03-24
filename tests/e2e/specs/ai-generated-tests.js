@@ -1,52 +1,97 @@
 module.exports = {
-    'Add new todo and check if it appears on the list': function (browser) {
-        browser
-            .url('http://localhost:8080') // Adjust the URL to your local server
-            .waitForElementVisible('#app', 1000)
-            .setValue('#new-todo', 'send an email to mom')
-            .click('#add-todo')
-            .waitForElementVisible('#todo-list', 1000)
-            .assert.containsText('#todo-list', 'send an email to mom')
-            .end();
-    },
-    'Add multiple todos and check the count': function (browser) {
-        browser
-            .url('http://localhost:8080') // Adjust the URL to your local server
-            .waitForElementVisible('#app', 1000)
-            .perform(function() {
-                ['test1', 'test2', 'test3', 'test4'].forEach(todo => {
-                    browser
-                        .setValue('#new-todo', todo)
-                        .click('#add-todo');
-                });
-            })
-            .waitForElementVisible('#todo-list', 1000)
-            .elements('css selector', '#todo-list li', function (result) {
-                this.assert.equal(result.value.length, 4, 'There are 4 items in the todo list');
-            })
-            .end();
-    },
-    'Add two todos, remove the first, and check the list': function (browser) {
-        browser
-            .url('http://localhost:8080') // Adjust the URL to your local server
-            .waitForElementVisible('#app', 1000)
-            .perform(function() {
-                ['todo1', 'todo2'].forEach(todo => {
-                    browser
-                        .setValue('#new-todo', todo)
-                        .click('#add-todo');
-                });
-            })
-            .waitForElementVisible('#todo-list', 1000)
-            .elements('css selector', '#todo-list li', function (result) {
-                this.assert.equal(result.value.length, 2, 'There are 2 items in the todo list');
-            })
-            .click('#todo-list li:first-child .remove-btn')
-            .waitForElementVisible('#todo-list', 1000)
-            .elements('css selector', '#todo-list li', function (result) {
-                this.assert.equal(result.value.length, 1, 'There is 1 item in the todo list after removal');
-            })
-            .assert.containsText('#todo-list', 'todo2')
-            .end();
-    }
+  'App root element rendering': browser => {
+    browser
+      .url('http://localhost:8080')
+      .waitForElementVisible('#app', 1000)
+      .assert.visible('#app')
+      .assert.elementPresent('#app')
+      .end();
+  },
+
+  'App form rendering': browser => {
+    browser
+      // Navigate to the app
+      .url('http://localhost:8080')
+      
+      // Wait for the form to be visible
+      .waitForElementVisible('form', 1000)
+      
+      // Check if all form elements are present and visible
+      .assert.visible('input.add-input')
+      .assert.attributeContains('input.add-input', 'placeholder', 'Add a todo')
+      .assert.visible('button.add-btn')
+      .assert.containsText('button.add-btn', 'Add')
+      .assert.visible('input#important')
+      .assert.visible('label[for="important"]')
+      .assert.containsText('label[for="important"]', 'Important')
+      
+      // Check if input is empty by default
+      .getValue('input.add-input', function(result) {
+        this.assert.equal(result.value, '')
+      })
+      
+      // Check if important checkbox is unchecked by default
+      .verify.not.selected('input#important')
+      .end();
+  },
+
+  'Add new todo': browser => {
+    const testTodo = 'Test todo item';
+    
+    browser
+      // Navigate to the app
+      .url('http://localhost:8080')
+      
+      // Wait for the form to be visible
+      .waitForElementVisible('form', 1000)
+      
+      // Add new item
+      .setValue('input.add-input', testTodo)
+      .click('button.add-btn')
+      
+      // Verify item was added
+      .waitForElementVisible('ul.todo-list li')
+      .assert.elementCount('ul.todo-list li', 1)
+      .assert.containsText('ul.todo-list li', testTodo)
+      
+      // Verify input was cleared
+      .getValue('input.add-input', function(result) {
+        this.assert.equal(result.value, '')
+      })
+      .end();
+  },
+
+
+  'Add important todo': browser => {
+    const importantTodo = 'Important task';
+    
+    browser
+      .url('http://localhost:8080')
+      .waitForElementVisible('form', 1000)
+      .setValue('input.add-input', importantTodo)
+      .click('input#important')
+      .click('button.add-btn')
+      .waitForElementVisible('ul.todo-list li')
+      .assert.containsText('ul.todo-list li', importantTodo)
+      .assert.containsText('ul.todo-list li', '!')
+      .end();
+  },
+
+  'Form resets after adding todo': browser => {
+    const testTodo = 'Test reset';
+    
+    browser
+      .url('http://localhost:8080')
+      .waitForElementVisible('form', 1000)
+      .setValue('input.add-input', testTodo)
+      .click('input#important')
+      .click('button.add-btn')
+      
+      // Check if form was reset
+      .getValue('input.add-input', function(result) {
+        this.assert.equal(result.value, '');
+      })
+      .verify.not.selected('input#important')
+      .end();
+  },
 };

@@ -1,0 +1,28 @@
+# version: '3'
+services:
+  sonarqube:
+    image: sonarqube:latest
+    ports:
+      - "9001:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+
+  robot:
+    build:
+      context: .
+      dockerfile: Dockerfile.robot
+    volumes:
+      - ./tests/robot:/tests
+      - ./tests/robot/results:/tests/results
+    depends_on:
+      - app
+    environment:
+      - URL=http://app:8080
+      - CHROME_BIN=/usr/bin/google-chrome
+      - CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
+    shm_size: '2gb'
